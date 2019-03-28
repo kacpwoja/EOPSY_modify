@@ -1,3 +1,87 @@
-#!/bin/sh
+#!/bin/sh 
+# script modify for EOPSY laboratory 1
+# author: Kacper Wojakowski 293064
 
-echo "test"
+name=`basename $0`
+
+# function for printing out errors
+print_error()
+{
+	echo "$name: error: $1" 1>&2
+}
+
+# test if there is an option already
+test_sedp()
+{
+	if test $1 != "n"
+	then
+	print_error "only one option from -l, -u, <sed pattern> is allowed at a time"; exit 1;
+	fi
+}
+
+# when no arguments
+if test -z "$1" || test "$1" = "-h"
+then
+cat<<EOT 1>&2
+
+$name is a script which modifies filenames, lowercasing/uppercasing them, or calling the given sed pattern
+
+usage:
+  $name [-h]
+  $name [-r] [-l|-u] <dir/file names...>
+  $name [-r] <sed pattern> <dir/file names...>
+
+options:
+  -h             shows help
+  -r             turns on recursion
+  -l|-u          chooses between lowercase and uppercase
+  <sed pattern>  sed patter with which to modify the names instead of lower/uppercasing
+
+$name correct syntax examples:
+  $name -l file1 file2
+  $name -r -u directory
+  $name ...
+
+$name incorrect syntax examples:
+  $name -d
+  $name -u -l file
+
+EOT
+exit 0
+fi
+
+# choosing options from arguments
+r=n
+sedp=n
+while test "x$1" != "x"
+do
+	case "$1" in
+		-r) r=y;;
+		-l) test_sedp $sedp; sedp='s/[A-Z]/\L&/g';;
+		-u) test_sedp $sedp; sedp='s/[a-z]/\U&/g';;
+		#sed?) test_sedp $sedp; sedp=$1;; TODO: sed pattern
+		-*) print_error "wrong option $1"; exit 1;;
+		*) break;;
+	esac
+	shift
+done
+
+# testing empty sed pattern
+if test $sedp = "n"
+then
+	print_error "no option chosen: choose one from -l, -u, <sed pattern>"
+	exit 1
+fi
+
+# TODO: recursion
+if test $r = "y"
+then
+	echo "recursion on"
+fi
+
+# Changing filenames
+while test "x$1" != "x"
+do
+	mv "$1" "`echo $1 | sed $sedp`"
+	shift
+done
