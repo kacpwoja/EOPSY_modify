@@ -85,3 +85,8 @@ do
 	mv "$1" "`echo $1 | sed $sedp`"
 	shift
 done
+
+# questions:
+# how should modify_examples work
+# should modify change file extensions (probably not)
+# can filenames come before options
