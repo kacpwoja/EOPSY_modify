@@ -13,14 +13,35 @@ print_error()
 # test if there is an option already
 test_sedp()
 {
-	if test $1 != "n"
+	if [ $1 != "n" ]
 	then
 	print_error "only one option from -l, -u, <sed pattern> is allowed at a time"; exit 1;
 	fi
 }
 
+# renaming
+mod()
+{
+	mv "$1" "`echo $1 | sed $2`"
+}
+
+# recursive function
+recursive()
+{
+	for el in "$1"/*
+	do
+		if [ -d "$el" ]
+		then
+			mod "$el" "$2"
+			recursive "`echo $el | sed $2`" "$2"
+		else
+			mod "$el" "$2"
+		fi
+	done
+}
+
 # when no arguments
-if test -z "$1" || test "$1" = "-h"
+if [ -z "$1" ] || [ "$1" = "-h" ]
 then
 cat<<EOT 1>&2
 
@@ -53,13 +74,13 @@ fi
 # choosing options from arguments
 r=n
 sedp=n
-while test "x$1" != "x"
+while [ "x$1" != "x" ]
 do
 	case "$1" in
 		-r) r=y;;
-		-l) test_sedp $sedp; sedp='s/[A-Z]/\L&/g';;
-		-u) test_sedp $sedp; sedp='s/[a-z]/\U&/g';;
-		#sed?) test_sedp $sedp; sedp=$1;; TODO: sed pattern
+		-l) test_sedp "$sedp"; sedp='s/[A-Z]/\L&/g';;
+		-u) test_sedp "$sedp"; sedp='s/[a-z]/\U&/g';;
+		#sed?) test_sedp "$sedp"; sedp=$1;; TODO: sed pattern
 		-*) print_error "wrong option $1"; exit 1;;
 		*) break;;
 	esac
@@ -67,22 +88,22 @@ do
 done
 
 # testing empty sed pattern
-if test $sedp = "n"
+if [ $sedp = "n" ]
 then
 	print_error "no option chosen: choose one from -l, -u, <sed pattern>"
 	exit 1
 fi
 
-# TODO: recursion
-if test $r = "y"
-then
-	echo "recursion on"
-fi
-
-# Changing filenames
-while test "x$1" != "x"
+# Changing filenames - no recursion
+while [ "x$1" != "x" ]
 do
-	mv "$1" "`echo $1 | sed $sedp`"
+	if [ $r = "y" ] && [ -d $1 ]
+	then
+		mod $1 $sedp
+		recursive "`echo $1 | sed $sedp`" "$sedp"
+	else
+		mod $1 $sedp
+	fi
 	shift
 done
 
