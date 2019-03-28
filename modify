@@ -19,12 +19,6 @@ test_sedp()
 	fi
 }
 
-# renaming
-mod()
-{
-	mv "$1" "`echo $1 | sed $2`"
-}
-
 # recursive function
 recursive()
 {
@@ -32,10 +26,10 @@ recursive()
 	do
 		if [ -d "$el" ]
 		then
-			mod "$el" "$2"
+			mv "$el" "`echo $el | sed $2`"
 			recursive "`echo $el | sed $2`" "$2"
 		else
-			mod "$el" "$2"
+			mv "$el" "`echo $el | sed $2`"
 		fi
 	done
 }
@@ -80,7 +74,7 @@ do
 		-r) r=y;;
 		-l) test_sedp "$sedp"; sedp='s/[A-Z]/\L&/g';;
 		-u) test_sedp "$sedp"; sedp='s/[a-z]/\U&/g';;
-		#sed?) test_sedp "$sedp"; sedp=$1;; TODO: sed pattern
+		#\'\*\') test_sedp "$sedp"; sedp=$1;; #TODO: correct sed pattern ?
 		-*) print_error "wrong option $1"; exit 1;;
 		*) break;;
 	esac
@@ -99,10 +93,10 @@ while [ "x$1" != "x" ]
 do
 	if [ $r = "y" ] && [ -d $1 ]
 	then
-		mod $1 $sedp
+		mv "$1" "`echo $1 | sed $sedp`"
 		recursive "`echo $1 | sed $sedp`" "$sedp"
 	else
-		mod $1 $sedp
+		mv "$1" "`echo $1 | sed $sedp`"
 	fi
 	shift
 done
