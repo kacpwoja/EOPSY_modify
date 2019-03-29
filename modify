@@ -77,8 +77,6 @@ do
 		-l) test_sedp "$sedp"; sedp='s/[A-Z]/\L&/g';;
 		-u) test_sedp "$sedp"; sedp='s/[a-z]/\U&/g';;
 		-*) print_error "wrong option $1"; exit 1;;
-		#\'\*\') test_sedp "$sedp"; sedp=$1;; #TODO: correct sed pattern ?
-		#*) break;;
 		*) if [ $sedp = "n" ]
 		   then
 			 sedp="$1"
@@ -108,8 +106,3 @@ do
 	fi
 	shift
 done
-
-# questions:
-# how should modify_examples work
-# should modify change file extensions (probably not)
-# can filenames come before options
