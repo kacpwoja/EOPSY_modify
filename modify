@@ -57,11 +57,12 @@ options:
 $name correct syntax examples:
   $name -l file1 file2
   $name -r -u directory
-  $name ...
+  $name 's/x/Y/' xylophone.txt file_xyz xxdir
 
 $name incorrect syntax examples:
   $name -d
   $name -u -l file
+  $name -r -u
 
 EOT
 exit 0
@@ -94,9 +95,17 @@ then
 	exit 1
 fi
 
-# Changing filenames - no recursion
+# testing empty file/directory list
+if [ -z "$1" ]
+then
+	print_error "no file or directory names given"
+	exit 1
+fi
+
+# Changing filenames
 while [ "x$1" != "x" ]
 do
+	# if recursion is on and argument is a directory
 	if [ $r = "y" ] && [ -d $1 ]
 	then
 		mv "$1" "`echo $1 | sed $sedp`"
