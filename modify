@@ -51,6 +51,8 @@ options:
   -r             turns on recursion
   -l|-u          chooses between lowercase and uppercase
   <sed pattern>  sed patter with which to modify the names instead of lower/uppercasing
+  
+  if neither -l or -u is chosen, the first non-option argument is taken as the sed pattern
 
 $name correct syntax examples:
   $name -l file1 file2
@@ -74,9 +76,15 @@ do
 		-r) r=y;;
 		-l) test_sedp "$sedp"; sedp='s/[A-Z]/\L&/g';;
 		-u) test_sedp "$sedp"; sedp='s/[a-z]/\U&/g';;
-		#\'\*\') test_sedp "$sedp"; sedp=$1;; #TODO: correct sed pattern ?
 		-*) print_error "wrong option $1"; exit 1;;
-		*) break;;
+		#\'\*\') test_sedp "$sedp"; sedp=$1;; #TODO: correct sed pattern ?
+		#*) break;;
+		*) if [ $sedp = "n" ]
+		   then
+			 sedp="$1"
+		   else
+			break
+		   fi;;
 	esac
 	shift
 done
