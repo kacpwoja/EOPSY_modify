@@ -1,4 +1,4 @@
-#!/bin/sh 
+#!/bin/sh
 # script modify for EOPSY laboratory 1
 # author: Kacper Wojakowski 293064
 
@@ -28,7 +28,8 @@ recursive()
 		then
 			mv "$el" "`echo $el | sed $2`"
 			recursive "`echo $el | sed $2`" "$2"
-		else
+		elif [ "$el" != "$1/*" ]
+		then
 			mv "$el" "`echo $el | sed $2`"
 		fi
 	done

@@ -31,20 +31,9 @@ Running modify -h
 Correct examples:
 Running modify -u directory folder
 .:
-dir
 DIRECTORY
 FOLDER
-
-./dir:
-another
-inside
-
-./dir/another:
-
-./dir/inside:
-deep
-
-./dir/inside/deep:
+dir
 
 ./DIRECTORY:
 elephant
@@ -55,12 +44,25 @@ giraffe
 ./DIRECTORY/giraffe:
 
 ./FOLDER:
+
+./dir:
+another
+inside
+
+./dir/another:
+
+./dir/inside:
+deep
+
+./dir/inside/deep:
 -----------------------------------
 Running modify -l DIRECTORY
 .:
+FOLDER
 dir
 directory
-FOLDER
+
+./FOLDER:
 
 ./dir:
 another
@@ -80,22 +82,12 @@ giraffe
 ./directory/elephant:
 
 ./directory/giraffe:
-
-./FOLDER:
 -----------------------------------
 Running modify 's/di/SED/' dir FOLDER
 .:
-directory
 FOLDER
 SEDr
-
-./directory:
-elephant
-giraffe
-
-./directory/elephant:
-
-./directory/giraffe:
+directory
 
 ./FOLDER:
 
@@ -109,12 +101,6 @@ inside
 deep
 
 ./SEDr/inside/deep:
------------------------------------
-Running modify -r -u SEDr
-.:
-directory
-FOLDER
-SEDR
 
 ./directory:
 elephant
@@ -123,6 +109,12 @@ giraffe
 ./directory/elephant:
 
 ./directory/giraffe:
+-----------------------------------
+Running modify -r -u SEDr
+.:
+FOLDER
+SEDR
+directory
 
 ./FOLDER:
 
@@ -136,12 +128,6 @@ INSIDE
 DEEP
 
 ./SEDR/INSIDE/DEEP:
------------------------------------
-Running modify -r -l SEDR
-.:
-directory
-FOLDER
-sedr
 
 ./directory:
 elephant
@@ -150,8 +136,22 @@ giraffe
 ./directory/elephant:
 
 ./directory/giraffe:
+-----------------------------------
+Running modify -r -l SEDR
+.:
+FOLDER
+directory
+sedr
 
 ./FOLDER:
+
+./directory:
+elephant
+giraffe
+
+./directory/elephant:
+
+./directory/giraffe:
 
 ./sedr:
 another
@@ -166,9 +166,11 @@ deep
 -----------------------------------
 Running modify -r 's/e/EOPSY/' directory
 .:
-diEOPSYectory
 FOLDER
+diEOPSYectory
 sedr
+
+./FOLDER:
 
 ./diEOPSYectory:
 elephant
@@ -177,8 +179,6 @@ giraffe
 ./diEOPSYectory/elephant:
 
 ./diEOPSYectory/giraffe:
-
-./FOLDER:
 
 ./sedr:
 another
@@ -194,13 +194,13 @@ deep
 Running modify -d
 -----------------------------------
 Running modify -l -u FOLDER
-diEOPSYectory
 FOLDER
+diEOPSYectory
 sedr
 -----------------------------------
 Running modify -r 's/[a-z]/1/g'
-diEOPSYectory
 FOLDER
+diEOPSYectory
 sedr
 -----------------------------------
 Cleaning up the test directory tree
