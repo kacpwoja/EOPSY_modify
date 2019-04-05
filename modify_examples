@@ -26,7 +26,7 @@ echo "Running modify -h"
 
 # Correct usage
 echo "-----------------------------------"
-echo "Correct examples:"
+echo "Correct usage examples:"
 echo "Running modify -u directory folder"
 ../modify -u directory folder
 ls -R
@@ -53,11 +53,12 @@ ls -R
 
 echo "-----------------------------------"
 echo "Running modify -r 's/e/EOPSY/' directory"
-../modify -r 's/r/EOPSY/' directory
+../modify -r 's/e/EOPSY/' directory
 ls -R
 
 #Incorrect usage
 echo "-----------------------------------"
+echo "Incorrect usage examples:"
 echo "Running modify -d"
 ../modify -d
 

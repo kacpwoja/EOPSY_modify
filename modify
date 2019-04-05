@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh
 # script modify for EOPSY laboratory 1
 # author: Kacper Wojakowski 293064
 
@@ -24,14 +24,24 @@ recursive()
 {
 	for el in "$1"/*
 	do
-		if [ -d "$el" ]
+		oldname=`basename $el`
+		# If there are no files in the directory, finish
+		if [ "$oldname" = "*" ]
 		then
-			newname="`echo $el | sed $2`"
+			break
+		fi
+
+		newname="$1/`echo $oldname | sed $2`"
+		# Only rename if the name was changed
+		if [ "$newname" != "$oldname" ]
+		then
 			mv "$el" "$newname"
-			recursive "$newname" "$2"
-		elif [ "$el" != "$1/*" ]
+		fi
+
+		# If it is a directory, go inside
+		if [ -d "$newname" ]
 		then
-			mv "$el" "`echo $el | sed $2`"
+			recursive "$newname" "$2"
 		fi
 	done
 }
@@ -39,7 +49,7 @@ recursive()
 # when no arguments
 if [ -z "$1" ] || [ "$1" = "-h" ]
 then
-cat<<EOT 1>&2
+cat<<EOT
 
 $name is a script which modifies filenames, lowercasing/uppercasing them, or calling the given sed pattern
 
@@ -107,14 +117,16 @@ fi
 # Changing filenames
 while [ "x$1" != "x" ]
 do
-	# if recursion is on and argument is a directory
-	if [ $r = "y" ] && [ -d $1 ]
+	newname="`echo $1 | sed $sedp`"
+	# Only rename if name has changed
+	if [ "$newname" != "$1" ]
 	then
-		newname="`echo $1 | sed $sedp`"
 		mv "$1" "$newname"
+	fi
+	# if recursion is on and argument is a directory
+	if [ $r = "y" ] && [ -d $newname ]
+	then
 		recursive "$newname" "$sedp"
-	else
-		mv "$1" "`echo $1 | sed $sedp`"
 	fi
 	shift
 done

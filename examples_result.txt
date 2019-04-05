@@ -27,23 +27,39 @@ giraffe
 ./folder:
 -----------------------------------
 Running modify -h
+
+modify is a script which modifies filenames, lowercasing/uppercasing them, or calling the given sed pattern
+
+usage:
+  modify [-h]
+  modify [-r] [-l|-u] <dir/file names...>
+  modify [-r] <sed pattern> <dir/file names...>
+
+options:
+  -h             shows help
+  -r             turns on recursion
+  -l|-u          chooses between lowercase and uppercase
+  <sed pattern>  sed patter with which to modify the names instead of lower/uppercasing
+  
+  if neither -l or -u is chosen, the first non-option argument is taken as the sed pattern
+
+modify correct syntax examples:
+  modify -l file1 file2
+  modify -r -u directory
+  modify 's/x/Y/' xylophone.txt file_xyz xxdir
+
+modify incorrect syntax examples:
+  modify -d
+  modify -u -l file
+  modify -r -u
+
 -----------------------------------
-Correct examples:
+Correct usage examples:
 Running modify -u directory folder
 .:
+dir
 DIRECTORY
 FOLDER
-dir
-
-./DIRECTORY:
-elephant
-giraffe
-
-./DIRECTORY/elephant:
-
-./DIRECTORY/giraffe:
-
-./FOLDER:
 
 ./dir:
 another
@@ -55,14 +71,22 @@ inside
 deep
 
 ./dir/inside/deep:
+
+./DIRECTORY:
+elephant
+giraffe
+
+./DIRECTORY/elephant:
+
+./DIRECTORY/giraffe:
+
+./FOLDER:
 -----------------------------------
 Running modify -l DIRECTORY
 .:
-FOLDER
 dir
 directory
-
-./FOLDER:
+FOLDER
 
 ./dir:
 another
@@ -82,12 +106,22 @@ giraffe
 ./directory/elephant:
 
 ./directory/giraffe:
+
+./FOLDER:
 -----------------------------------
 Running modify 's/di/SED/' dir FOLDER
 .:
+directory
 FOLDER
 SEDr
-directory
+
+./directory:
+elephant
+giraffe
+
+./directory/elephant:
+
+./directory/giraffe:
 
 ./FOLDER:
 
@@ -101,6 +135,12 @@ inside
 deep
 
 ./SEDr/inside/deep:
+-----------------------------------
+Running modify -r -u SEDr
+.:
+directory
+FOLDER
+SEDR
 
 ./directory:
 elephant
@@ -109,12 +149,6 @@ giraffe
 ./directory/elephant:
 
 ./directory/giraffe:
------------------------------------
-Running modify -r -u SEDr
-.:
-FOLDER
-SEDR
-directory
 
 ./FOLDER:
 
@@ -128,22 +162,12 @@ INSIDE
 DEEP
 
 ./SEDR/INSIDE/DEEP:
-
-./directory:
-elephant
-giraffe
-
-./directory/elephant:
-
-./directory/giraffe:
 -----------------------------------
 Running modify -r -l SEDR
 .:
-FOLDER
 directory
+FOLDER
 sedr
-
-./FOLDER:
 
 ./directory:
 elephant
@@ -152,6 +176,8 @@ giraffe
 ./directory/elephant:
 
 ./directory/giraffe:
+
+./FOLDER:
 
 ./sedr:
 another
@@ -166,19 +192,19 @@ deep
 -----------------------------------
 Running modify -r 's/e/EOPSY/' directory
 .:
+dirEOPSYctory
 FOLDER
-diEOPSYectory
 sedr
 
+./dirEOPSYctory:
+EOPSYlephant
+giraffEOPSY
+
+./dirEOPSYctory/EOPSYlephant:
+
+./dirEOPSYctory/giraffEOPSY:
+
 ./FOLDER:
-
-./diEOPSYectory:
-elephant
-giraffe
-
-./diEOPSYectory/elephant:
-
-./diEOPSYectory/giraffe:
 
 ./sedr:
 another
@@ -191,16 +217,20 @@ deep
 
 ./sedr/inside/deep:
 -----------------------------------
+Incorrect usage examples:
 Running modify -d
+modify: error: wrong option -d
 -----------------------------------
 Running modify -l -u FOLDER
+modify: error: only one option from -l, -u, <sed pattern> is allowed at a time
+dirEOPSYctory
 FOLDER
-diEOPSYectory
 sedr
 -----------------------------------
 Running modify -r 's/[a-z]/1/g'
+modify: error: no file or directory names given
+dirEOPSYctory
 FOLDER
-diEOPSYectory
 sedr
 -----------------------------------
 Cleaning up the test directory tree
