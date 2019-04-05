@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 # script modify for EOPSY laboratory 1
 # author: Kacper Wojakowski 293064
 
@@ -26,8 +26,9 @@ recursive()
 	do
 		if [ -d "$el" ]
 		then
-			mv "$el" "`echo $el | sed $2`"
-			recursive "`echo $el | sed $2`" "$2"
+			newname="`echo $el | sed $2`"
+			mv "$el" "$newname"
+			recursive "$newname" "$2"
 		elif [ "$el" != "$1/*" ]
 		then
 			mv "$el" "`echo $el | sed $2`"
@@ -109,8 +110,9 @@ do
 	# if recursion is on and argument is a directory
 	if [ $r = "y" ] && [ -d $1 ]
 	then
-		mv "$1" "`echo $1 | sed $sedp`"
-		recursive "`echo $1 | sed $sedp`" "$sedp"
+		newname="`echo $1 | sed $sedp`"
+		mv "$1" "$newname"
+		recursive "$newname" "$sedp"
 	else
 		mv "$1" "`echo $1 | sed $sedp`"
 	fi
