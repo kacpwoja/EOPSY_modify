@@ -233,4 +233,10 @@ dirEOPSYctory
 FOLDER
 sedr
 -----------------------------------
+Running modify -u 's/[a-z]/1/g'
+mv: cannot stat 's/[a-z]/1/g': No such file or directory
+dirEOPSYctory
+FOLDER
+sedr
+-----------------------------------
 Cleaning up the test directory tree

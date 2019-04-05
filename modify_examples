@@ -72,6 +72,11 @@ echo "Running modify -r 's/[a-z]/1/g'"
 ../modify -r 's/[a-z]/1/g'
 ls
 
+echo "-----------------------------------"
+echo "Running modify -u 's/[a-z]/1/g'"
+../modify -u 's/[a-z]/1/g'
+ls
+
 # After finished, clean up
 echo "-----------------------------------"
 echo "Cleaning up the test directory tree"

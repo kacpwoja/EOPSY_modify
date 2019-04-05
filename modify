@@ -46,7 +46,7 @@ recursive()
 	done
 }
 
-# when no arguments
+# when no arguments or -h chosen, print help and exit
 if [ -z "$1" ] || [ "$1" = "-h" ]
 then
 cat<<EOT
@@ -83,6 +83,7 @@ fi
 # choosing options from arguments
 r=n
 sedp=n
+
 while [ "x$1" != "x" ]
 do
 	case "$1" in
